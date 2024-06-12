@@ -1,0 +1,110 @@
+*{
+    user-select: none;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+    padding: 10px;
+    width: 100%;
+}
+
+.menu svg {
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.menu i {
+    background: linear-gradient(130deg, #9796f0, #fbc7d4);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-weight: 600;
+    font-size: 2.1rem;
+    text-decoration: none;
+    padding: 10px;
+}
+
+
+.items {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.items img {
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 3px solid #ffa500;
+}
+
+.name {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.name h3 {
+    font-size: 1.8em;
+    color: #ffffff;
+}
+
+.test {
+    background-color: #1f1f1f;
+    border: 1px solid #333333;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-bottom: 20px;
+}
+
+.test p {
+    font-size: 1.1em;
+    margin: 10px 0;
+    color: #aaaaaa;
+}
+
+
+.button {
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    display: block;
+    background: linear-gradient(160deg, #9796f0, #fbc7d4);
+    color: #1f1f1f;
+    border: none;
+    border-radius: 8px;
+    padding: 15px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+@media (max-width: 480px) {
+    .menu {
+        font-size: 18px;
+        gap: 0;
+    }
+}
