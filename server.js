@@ -226,9 +226,9 @@ server.post('/api/get-user-answers', async (req, res) => {
 server.post('/api/submit-test', async (req, res) => {
     const { userId, test_name } = req.body;
     try {
-        const userAnswers = await Answer.findOne({ userId, test_name });
+        let userAnswers = await Answer.findOne({ userId, test_name });
         if (!userAnswers) {
-            return res.status(404).json({ message: 'No answers found for this user and test' });
+            userAnswers = new Answer({ userId, test_name });
         }
         userAnswers.submitted = 1;
         await userAnswers.save();
