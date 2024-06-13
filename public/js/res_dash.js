@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async() => {
             document.querySelector('.test p:nth-child(2)').textContent = `Total Correct answers: ${result.correct}`;
             document.querySelector('.test p:nth-child(3)').textContent = `Total Incorrect answers: ${result.incorrect}`;
             document.querySelector('.test p:nth-child(4)').textContent = `Total Skipped questions: ${result.skipped}`;
-            document.querySelector('.test p:nth-child(5)').textContent = `Total Marks Scored: ${totalMarks || 'N/A'}`;
+            document.querySelector('.test p:nth-child(5)').textContent = `Total Marks Scored: ${totalMarks}`;
         } else {
             console.error('Failed to fetch results:', response.status, response.statusText);
             const errorText = await response.text();
