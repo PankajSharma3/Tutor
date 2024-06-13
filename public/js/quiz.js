@@ -32,7 +32,6 @@ window.addEventListener('keydown', function (e) {
     }
 });
 
-// Auto submit after tab switching
 function submitTest() {
     alert("Your test is submitted now");
     const user = JSON.parse(localStorage.getItem('user'));
@@ -65,111 +64,126 @@ function submitTest() {
     });
 }
 
-fetch('/api/questions', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ testName: localStorage.getItem('test') })
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error('Network response was not ok ' + response.statusText);
+function checkEndTime() {
+    const endTime = localStorage.getItem('end_time');
+   
+    const endDateTime = new Date(`${localStorage.getItem('date')} ${endTime}`);
+    const currentTime = new Date();
+
+    if (currentTime > endDateTime) {
+        submitTest();
     }
-    return response.json();
-})
-.then(questions => {
-    console.log('Fetched questions:', questions);
-    localStorage.setItem('questions', JSON.stringify(questions));
-    let currentQuestion = localStorage.getItem('currentQuestion') ? parseInt(localStorage.getItem('currentQuestion')) : 0;
-    const question = document.getElementById("quiz-question");
-    const option_a = document.getElementById("text_option_a");
-    const option_b = document.getElementById("text_option_b");
-    const option_c = document.getElementById("text_option_c");
-    const option_d = document.getElementById("text_option_d");
-    const submit = document.querySelector(".submit");
-    const next = document.querySelector(".next");
-    const previous = document.querySelector(".previous");
+}
 
-    function loadQuestion() {
-        const currentQuiz = questions[currentQuestion];
-        question.textContent = (currentQuestion + 1) + ". " + currentQuiz.text;
-        option_a.textContent = currentQuiz.options[0];
-        option_b.textContent = currentQuiz.options[1];
-        option_c.textContent = currentQuiz.options[2];
-        option_d.textContent = currentQuiz.options[3];
-        document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
-    }
-    loadQuestion();
-
-    submit.addEventListener("click", () => {
-        const checkedAns = document.querySelector('input[type="radio"]:checked');
-        if (checkedAns === null) {
-            alert("Please select an answer");
-        } else {
-            const user = JSON.parse(localStorage.getItem('user'));
-            const answer = checkedAns.nextElementSibling.textContent;
-            const userId = user ? user._id : null;
-            const test_name = localStorage.getItem('test');
-
-            if (!userId || !test_name) {
-                console.error('User ID or test name not found in local storage');
-                return;
-            }
-
-            fetch('/api/update-answer', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ userId, questionIndex: currentQuestion, answer, test_name })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.message === 'Answer updated successfully') {
-                    currentQuestion++;
-                    if (currentQuestion < questions.length) {
-                        loadQuestion();
-                        localStorage.setItem('currentQuestion', currentQuestion);
-                    } else {
-                        submitTest();
-                    }
-                } else {
-                    console.error('Error updating answer:', data);
-                }
-            })
-            .catch(error => {
-                console.error('Error updating answer:', error);
-            });
+document.addEventListener('DOMContentLoaded', () => {
+    fetch('/api/questions', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ testName: localStorage.getItem('test') })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok ' + response.statusText);
         }
-    });
+        return response.json();
+    })
+    .then(questions => {
+        console.log('Fetched questions:', questions);
+        localStorage.setItem('questions', JSON.stringify(questions));
+        let currentQuestion = localStorage.getItem('currentQuestion') ? parseInt(localStorage.getItem('currentQuestion')) : 0;
+        const question = document.getElementById("quiz-question");
+        const option_a = document.getElementById("text_option_a");
+        const option_b = document.getElementById("text_option_b");
+        const option_c = document.getElementById("text_option_c");
+        const option_d = document.getElementById("text_option_d");
+        const submit = document.querySelector(".submit");
+        const next = document.querySelector(".next");
+        const previous = document.querySelector(".previous");
 
-    next.addEventListener("click", () => {
-        if (currentQuestion < questions.length - 1) {
-            currentQuestion++;
-            loadQuestion();
-            localStorage.setItem('currentQuestion', currentQuestion);
-        } else {
-            if (confirm("You are on the last question. Do you want to submit the test?")) {
-                submitTest();
+        function loadQuestion() {
+            const currentQuiz = questions[currentQuestion];
+            question.textContent = (currentQuestion + 1) + ". " + currentQuiz.text;
+            option_a.textContent = currentQuiz.options[0];
+            option_b.textContent = currentQuiz.options[1];
+            option_c.textContent = currentQuiz.options[2];
+            option_d.textContent = currentQuiz.options[3];
+            document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+        }
+        loadQuestion();
+
+        submit.addEventListener("click", () => {
+            const checkedAns = document.querySelector('input[type="radio"]:checked');
+            if (checkedAns === null) {
+                alert("Please select an answer");
             } else {
-                alert("This is the last question.");
+                const user = JSON.parse(localStorage.getItem('user'));
+                const answer = checkedAns.nextElementSibling.textContent;
+                const userId = user ? user._id : null;
+                const test_name = localStorage.getItem('test');
+
+                if (!userId || !test_name) {
+                    console.error('User ID or test name not found in local storage');
+                    return;
+                }
+
+                fetch('/api/update-answer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ userId, questionIndex: currentQuestion, answer, test_name })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.message === 'Answer updated successfully') {
+                        currentQuestion++;
+                        if (currentQuestion < questions.length) {
+                            loadQuestion();
+                            localStorage.setItem('currentQuestion', currentQuestion);
+                        } else {
+                            submitTest();
+                        }
+                    } else {
+                        console.error('Error updating answer:', data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error updating answer:', error);
+                });
             }
-        }
+        });
+
+        next.addEventListener("click", () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                loadQuestion();
+                localStorage.setItem('currentQuestion', currentQuestion);
+            } else {
+                if (confirm("You are on the last question. Do you want to submit the test?")) {
+                    submitTest();
+                } else {
+                    alert("This is the last question.");
+                }
+            }
+        });
+
+        previous.addEventListener("click", () => {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                loadQuestion();
+                localStorage.setItem('currentQuestion', currentQuestion);
+            } else {
+                alert("This is the first question.");
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error fetching questions:', error);
     });
 
-    previous.addEventListener("click", () => {
-        if (currentQuestion > 0) {
-            currentQuestion--;
-            loadQuestion();
-            localStorage.setItem('currentQuestion', currentQuestion);
-        } else {
-            alert("This is the first question.");
-        }
-    });
-})
-.catch(error => {
-    console.error('Error fetching questions:', error);
+    setInterval(checkEndTime, 1000);
 });
 
 function checkUserDetails() {
