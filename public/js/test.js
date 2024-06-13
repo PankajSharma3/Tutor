@@ -12,23 +12,27 @@ document.addEventListener('DOMContentLoaded', () => {
         tests.forEach(test => {
             const listItem = document.createElement('li');
             listItem.classList.add('test-item');
+            const date = new Date(test.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit'
+            });
+            const start_time = parseTime(test.start_time);
+            const end_time = parseTime(test.end_time);
             listItem.innerHTML = `
                 <div class="card">
                     <img src="/photo/test.png" alt="Test">
                     <div class="card-content">
                         <h3>${test.test}</h3>
-                        <p class="test-info">Date: ${new Date(test.date).toLocaleDateString()}</p>
-                        <p class="test-info">Start Time: ${test.start_time}</p>
-                        <p class="test-info">End Time: ${test.end_time}</p>
+                        <p class="test-info">Date: ${date}</p>
+                        <p class="test-info">Start Time: ${start_time}</p>
+                        <p class="test-info">End Time: ${end_time}</p>
                     </div>
                 </div>
             `;
             testList.appendChild(listItem);
             const card = listItem.querySelector('.card');
             const testName = test.test;
-            const start_time = test.start_time;
-            const end_time = test.end_time;
-            const date = new Date(test.date).toLocaleDateString();
             card.addEventListener('click', () => {
                 localStorage.setItem('test', testName);
                 localStorage.setItem('start_time', start_time);
@@ -54,12 +58,12 @@ function checkSubmissionStatus() {
     const user = JSON.parse(localStorage.getItem('user'));
     const userId = user._id;
     const test_name = localStorage.getItem('test');
-    const test_date = new Date(localStorage.getItem('date'));
+    const date = localStorage.getItem('date');
     const start_time = localStorage.getItem('start_time');
     const end_time = localStorage.getItem('end_time');
     const current_time = new Date();
-    const start_datetime = new Date(`${test_date.toLocaleDateString()} ${start_time}`);
-    const end_datetime = new Date(`${test_date.toLocaleDateString()} ${end_time}`);
+    const start_datetime = new Date(`${date} ${start_time}`);
+    const end_datetime = new Date(`${date} ${end_time}`);
 
     fetch('/api/check-submission', {
         method: 'POST',
@@ -85,4 +89,18 @@ function checkSubmissionStatus() {
     .catch(error => {
         console.error('Error checking submission status:', error);
     });
+}
+
+// Function to parse time into 24-hour format
+function parseTime(timeString) {
+    const [timePart, modifier] = timeString.split(' ');
+    let [hours, minutes] = timePart.split(':');
+
+    if (modifier === 'AM' && hours === '12') {
+        hours = '00';
+    } else if (modifier === 'PM' && hours !== '12') {
+        hours = String(parseInt(hours, 10) + 12);
+    }
+
+    return `${hours}:${minutes}`;
 }
