@@ -10,15 +10,11 @@
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     width: 100%;
 }
 
 .container {
-    height: 100vh;
     width: 100%;
     padding: 20px;
     display: flex;
@@ -107,7 +103,7 @@ body {
 
 @media (max-width: 768px) {
     .card {
-        width: calc(100% - 20px);
+        width: calc(45% - 20px);
     }
 
     .menu {
@@ -118,6 +114,7 @@ body {
 @media (max-width: 480px) {
     .card {
         width: calc(100% - 20px); 
+        padding: 0px;
     }
 
     .menu {
@@ -133,3 +130,4 @@ body {
         height: 40px;
     }
 }
+
