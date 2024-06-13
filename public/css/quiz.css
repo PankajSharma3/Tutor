@@ -123,8 +123,8 @@ button:disabled {
     .container {
         padding: 10px;
     }
-    .menu {
-        font-size: 18px;
+    .menu i{
+        font-size: x-large;
     }
     .menu svg {
         margin-bottom: 15px;
