@@ -299,12 +299,14 @@ server.post('/api/tests', async (req, res) => {
 
 server.post('/api/submitted-tests', async (req, res) => {
     try {
-        const submittedTestNames = await Answer.distinct('test_name', { submitted: 1 });
+        const { userId } = req.body;
+        const submittedTests = await Answer.find({ userId, submitted: 1 }, 'test_name');
+        const submittedTestNames = submittedTests.map(test => test.test_name);
         const tests = await Test.find({ test: { $in: submittedTestNames } }, 'test date start_time end_time');
         res.json(tests);
-    } catch (error) {
-        console.error('Error fetching test details:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching submitted tests");
     }
 });
 
