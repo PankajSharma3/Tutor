@@ -25,8 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="card-content">
                         <h3>${test.test}</h3>
                         <p class="test-info">Date: ${date}</p>
-                        <p class="test-info">Start Time: ${start_time}</p>
-                        <p class="test-info">End Time: ${end_time}</p>
+                        <p class="test-info">Start Time: ${test.start_time}</p>
+                        <p class="test-info">End Time: ${test.end_time}</p>
                     </div>
                 </div>
             `;
