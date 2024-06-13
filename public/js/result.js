@@ -3,15 +3,24 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function fetchSubmittedTests() {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const userId = user._id;
+    
     fetch('/api/submitted-tests', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
-        }
+        },
+        body: JSON.stringify({ userId })
     })
     .then(response => response.json())
     .then(tests => {
-        displaySubmittedTests(tests);
+        if (tests.length === 0) {
+            alert('No test attempted.');
+            window.location.href = '/dashboard';
+        } else {
+            displaySubmittedTests(tests);
+        }
     })
     .catch(error => {
         console.error('Error fetching submitted tests:', error);
@@ -77,5 +86,4 @@ function checkUserDetails() {
         window.location.href = '/login';
     }
 }
-
 checkUserDetails();
