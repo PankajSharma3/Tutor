@@ -102,9 +102,9 @@ body {
     transition: background-color 0.3s ease, transform 0.3s ease;
 }
 
-@media (max-width: 480px) {
-    .menu {
-        font-size: 18px;
+@media (max-width: 380px) {
+    .menu i{
+        font-size: x-large;
         gap: 0;
     }
 }
