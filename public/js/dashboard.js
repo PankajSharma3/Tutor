@@ -16,7 +16,7 @@ function checkUserDetails() {
 checkUserDetails();
 
 pyq.addEventListener('click',()=>{
-    window.location.href="/coming";
+    window.location.href="/notes";
 })
 
 session.addEventListener('click',()=>{
