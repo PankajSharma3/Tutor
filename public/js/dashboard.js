@@ -32,7 +32,7 @@ test.addEventListener('click',()=>{
 })
 
 bank.addEventListener('click',()=>{
-    window.location.href="/coming";
+    window.location.href="/question-bank";
 })
 
 result.addEventListener('click',()=>{
