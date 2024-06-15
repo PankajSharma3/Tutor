@@ -323,6 +323,19 @@ server.post('/api/secrets',async(req,res)=>{
     res.json(secrets);
 });
 
+server.post('/api/secrets/question',async(req,res)=>{
+    const secrets = {
+        apiKey: process.env.FIREBASE_API_KEY,
+        authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.FIREBASE_APP_ID,
+        measurementId: process.env.FIREBASE_MEASUREMENT_ID
+    };
+    res.json(secrets);
+});
+
 const signup = fs.readFileSync('./public/html/signup.html', 'utf8');
 const login = fs.readFileSync('./public/html/login.html', 'utf8');
 const home = fs.readFileSync('./public/html/index.html', 'utf8');
@@ -337,6 +350,7 @@ const test = fs.readFileSync('./public/html/test.html', 'utf8');
 const redirect = fs.readFileSync('./public/html/thanks_res.html', 'utf8');
 const thanks = fs.readFileSync('./public/html/thanks.html', 'utf8');
 const notes = fs.readFileSync('./public/html/notes.html','utf8');
+const questionbank = fs.readFileSync('./public/html/question-bank.html','utf8');
 
 server.get('/signup', (req, res) => {
     res.send(signup);
@@ -392,6 +406,10 @@ server.get('/thanks', (req, res) => {
 
 server.get('/notes',(req,res)=>{
     res.send(notes);
+})
+
+server.get('/question-bank',(req,res)=>{
+    res.send(questionbank);
 })
 
 server.listen(8080, () => {
