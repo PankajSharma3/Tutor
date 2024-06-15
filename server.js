@@ -323,6 +323,7 @@ const result = fs.readFileSync('./public/html/result.html', 'utf8');
 const test = fs.readFileSync('./public/html/test.html', 'utf8');
 const redirect = fs.readFileSync('./public/html/thanks_res.html', 'utf8');
 const thanks = fs.readFileSync('./public/html/thanks.html', 'utf8');
+const notes = fs.readFileSync('./public/html/notes.html','utf8');
 
 server.get('/signup', (req, res) => {
     res.send(signup);
@@ -375,6 +376,10 @@ server.get('/redirect', (req, res) => {
 server.get('/thanks', (req, res) => {
     res.send(thanks);
 });
+
+server.get('/notes',(req,res)=>{
+    res.send(notes);
+})
 
 server.listen(8080, () => {
     console.log(`Server is running on ${port}`);
