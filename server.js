@@ -310,6 +310,19 @@ server.post('/api/submitted-tests', async (req, res) => {
     }
 });
 
+server.post('/api/secrets',async(req,res)=>{
+    const secrets = {
+        apiKey: process.env.API_KEY,
+        authDomain: process.env.AUTH_DOMAIN,
+        projectId: process.env.PROJECT_ID,
+        storageBucket: process.env.STORAGE_BUCKET,
+        messagingSenderId: process.env.MESSAGING_SENDER_ID,
+        appId: process.env.APP_ID,
+        measurementId: process.env.MEASUREMENT_ID
+    } 
+    res.json(secrets);
+});
+
 const signup = fs.readFileSync('./public/html/signup.html', 'utf8');
 const login = fs.readFileSync('./public/html/login.html', 'utf8');
 const home = fs.readFileSync('./public/html/index.html', 'utf8');
