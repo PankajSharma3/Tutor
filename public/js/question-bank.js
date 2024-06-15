@@ -103,6 +103,7 @@ async function initializeAppWithSecrets() {
             });
     }
 
+    
     listFolders();
 }
 
