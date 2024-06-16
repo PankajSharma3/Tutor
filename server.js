@@ -37,6 +37,7 @@ const questionSchema = new Schema({
 
 const answerSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    username: { type: String },
     answers: { type: [String], default: [] },
     test_name: { type: String, required: true },
     submitted: { type: Number, default: 0 }
@@ -66,12 +67,12 @@ async function main() {
 main().catch(err => console.error(err));
 
 server.post('/api/update-answer', async (req, res) => {
-    const { userId, questionIndex, answer, test_name } = req.body;
+    const { username,userId, questionIndex, answer, test_name } = req.body;
     try {
         let userAnswers = await Answer.findOne({ userId, test_name });
 
         if (!userAnswers) {
-            userAnswers = new Answer({ userId, answers: [], test_name });
+            userAnswers = new Answer({ username, userId, answers: [], test_name });
         }
         userAnswers.answers[questionIndex] = answer;
         await userAnswers.save();
