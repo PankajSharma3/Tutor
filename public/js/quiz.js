@@ -122,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const answer = checkedAns.nextElementSibling.textContent;
                 const userId = user ? user._id : null;
                 const test_name = localStorage.getItem('test');
+                const username = user? user.username : null;
 
                 if (!userId || !test_name) {
                     console.error('User ID or test name not found in local storage');
@@ -133,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ userId, questionIndex: currentQuestion, answer, test_name })
+                    body: JSON.stringify({ username, userId, questionIndex: currentQuestion, answer, test_name })
                 })
                 .then(response => response.json())
                 .then(data => {
