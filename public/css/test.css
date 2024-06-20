@@ -97,8 +97,11 @@ body {
 
 
 @media (max-width: 480px) {
+    .menu{
+        gap:20px;
+    }
     .menu i{
-        font-size: 1.0rem;
+        font-size: x-large;
     }
 
     .menu svg {
