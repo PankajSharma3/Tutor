@@ -1,8 +1,9 @@
+
 * {
     user-select: none;
 }
 
-h1{
+h1 {
     margin-left: 2%;
     margin-bottom: 2%;
 }
@@ -96,13 +97,12 @@ body {
     margin: 10px 0;
 }
 
-
 @media (max-width: 480px) {
-    .menu{
-        gap:20px;
+    .menu {
+        gap: 20px;
     }
     
-    .menu i{
+    .menu i {
         font-size: x-large;
     }
 
@@ -111,11 +111,30 @@ body {
         height: 40px;
     }
 
-    .card img{
+    .card img {
         max-width: 60px;
     }
 
-    h1{
+    h1 {
         font-size: x-large;
     }
+}
+
+.loader {
+    border: 8px solid #ffffff;
+    border-radius: 50%;
+    border-top: 8px solid #26063b;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
