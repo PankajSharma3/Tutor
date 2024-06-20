@@ -1,6 +1,8 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getStorage, ref, listAll, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
+const loader = document.getElementById('loader');
+
 async function fetchSecrets() {
     try {
         const response = await fetch('/api/secrets/question', {
@@ -20,9 +22,12 @@ async function fetchSecrets() {
 }
 
 async function initializeAppWithSecrets() {
+    loader.style.display = 'block';
+
     const secrets = await fetchSecrets();
     if (!secrets) {
         console.error('Secrets not available');
+        loader.style.display = 'none';
         return;
     }
 
@@ -100,11 +105,11 @@ async function initializeAppWithSecrets() {
             })
             .catch((error) => {
                 console.error('Error listing folders:', error);
+            })
+            .finally(() => {
+                loader.style.display = 'none';
             });
     }
-
-    
     listFolders();
 }
-
 initializeAppWithSecrets();
