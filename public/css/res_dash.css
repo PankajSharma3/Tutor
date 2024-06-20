@@ -103,8 +103,10 @@ body {
 }
 
 @media (max-width: 380px) {
+    .menu{
+        gap:20px
+    }
     .menu i{
         font-size: x-large;
-        gap: 0;
     }
 }
