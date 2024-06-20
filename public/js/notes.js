@@ -20,6 +20,9 @@ async function fetchSecrets() {
 }
 
 async function initializeAppWithSecrets() {
+    const loader = document.getElementById('loader');
+    loader.style.display = 'block';
+
     const secrets = await fetchSecrets();
     if (secrets) {
         const firebaseConfig = {
@@ -51,47 +54,41 @@ async function initializeAppWithSecrets() {
             card.appendChild(details);
             testListElement.appendChild(card);
         }
-        function downloadFilesInFolder(folderName) {
+
+        async function downloadFilesInFolder(folderName) {
             const folderRef = ref(storage, folderName);
-            listAll(folderRef)
-                .then((res) => {
-                    res.items.forEach((itemRef) => {
-                        getDownloadURL(itemRef)
-                            .then((url) => {
-                                const link = document.createElement('a');
-                                link.href = url;
-                                link.download = itemRef.name;
-                                link.click();
-                            })
-                            .catch((error) => {
-                                console.error(error);
-                            });
-                    });
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
+            const res = await listAll(folderRef);
+            res.items.forEach(async (itemRef) => {
+                const url = await getDownloadURL(itemRef);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = itemRef.name;
+                link.click();
+            });
         }
 
-        function listFolders() {
+        async function listFolders() {
             const listRef = ref(storage);
-            listAll(listRef)
-                .then((res) => {
-                    const folderNames = new Set();
-                    res.prefixes.forEach((folderRef) => {
-                        folderNames.add(folderRef.name);
-                    });
-                    folderNames.forEach((folderName) => {
-                        createTestCard(folderName);
-                    });
-                })
-                .catch((error) => {
-                    console.error(error);
+            try {
+                const res = await listAll(listRef);
+                const folderNames = new Set();
+                res.prefixes.forEach((folderRef) => {
+                    folderNames.add(folderRef.name);
                 });
+                folderNames.forEach((folderName) => {
+                    createTestCard(folderName);
+                });
+            } catch (error) {
+                console.error(error);
+            } finally {
+                loader.style.display = 'none';
+            }
         }
+
         listFolders();
     } else {
         console.error('Secrets not available');
+        loader.style.display = 'none';
     }
 }
 
