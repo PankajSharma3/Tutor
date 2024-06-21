@@ -53,7 +53,12 @@ function submitTest() {
     .then(response => response.json())
     .then(data => {
         if (data.message === 'Test submitted successfully') {
-            localStorage.removeItem('currentQuestion');
+            let keys = Object.keys(localStorage);
+            keys.forEach(key => {
+              if (key !== 'user') {
+                localStorage.removeItem(key);
+              }
+            });
             window.location.href = "/thanks";
         } else {
             console.error('Error submitting test:', data);
@@ -93,6 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log('Fetched questions:', questions);
         localStorage.setItem('questions', JSON.stringify(questions));
         let currentQuestion = localStorage.getItem('currentQuestion') ? parseInt(localStorage.getItem('currentQuestion')) : 0;
+        let answers = JSON.parse(localStorage.getItem('answers')) || [];
         const question = document.getElementById("quiz-question");
         const option_a = document.getElementById("text_option_a");
         const option_b = document.getElementById("text_option_b");
@@ -109,7 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
             option_b.textContent = currentQuiz.options[1];
             option_c.textContent = currentQuiz.options[2];
             option_d.textContent = currentQuiz.options[3];
+
             document.querySelectorAll('input[type="radio"]').forEach(input => input.checked = false);
+            if (answers[currentQuestion]) {
+                document.querySelectorAll('input[type="radio"]').forEach(input => {
+                    if (input.nextElementSibling.textContent === answers[currentQuestion]) {
+                        input.checked = true;
+                    }
+                });
+            }
         }
         loadQuestion();
 
@@ -139,12 +153,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 .then(response => response.json())
                 .then(data => {
                     if (data.message === 'Answer updated successfully') {
+                        answers[currentQuestion] = answer;
+                        localStorage.setItem('answers', JSON.stringify(answers));
                         currentQuestion++;
                         if (currentQuestion < questions.length) {
                             loadQuestion();
                             localStorage.setItem('currentQuestion', currentQuestion);
                         } else {
-                            submitTest();
+                            if (confirm("You are on the last question. Do you want to submit the test?")) {
+                                submitTest();
+                            }
                         }
                     } else {
                         console.error('Error updating answer:', data);
