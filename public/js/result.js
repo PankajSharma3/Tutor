@@ -79,11 +79,27 @@ function createTestCard(test) {
     return card;
 }
 
+
 function checkUserDetails() {
-    const user = localStorage.getItem('user');
-    if (!user) {
-        alert('You are not logged in. Redirecting to login page...');
-        window.location.href = '/login';
+    const user=JSON.parse(localStorage.getItem('user'))
+    if (user) {
+        fetch('/api/user', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ _id: user })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (!data.success) {
+                window.location.href = '/';
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    }
+    else{
+        window.location.href = '/';
     }
 }
 checkUserDetails();
