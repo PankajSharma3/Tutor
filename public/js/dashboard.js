@@ -1,5 +1,5 @@
 const pyq = document.querySelector('.pyq');
-const session = document.querySelector('.session');
+const logout = document.querySelector('.logout');
 const doubt = document.querySelector('.doubt');
 const test = document.querySelector('.test');
 const bank = document.querySelector('.bank');
@@ -19,8 +19,11 @@ pyq.addEventListener('click',()=>{
     window.location.href="/notes";
 })
 
-session.addEventListener('click',()=>{
-    window.location.href = "/coming";
+logout.addEventListener('click',()=>{
+    if(confirm("Do you want to logout?")){
+        localStorage.removeItem('user');
+        window.location.href = "/";
+    }
 })
 
 doubt.addEventListener('click',()=>{
@@ -38,3 +41,4 @@ bank.addEventListener('click',()=>{
 result.addEventListener('click',()=>{
     window.location.href = "/result";
 })
+
