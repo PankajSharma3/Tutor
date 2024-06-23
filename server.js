@@ -337,6 +337,20 @@ server.post('/api/secrets/question',async(req,res)=>{
     res.json(secrets);
 });
 
+server.post('/api/user', async (req, res) => {
+    const { _id } = req.body;
+    try {
+        const user = await User.findOne({_id});
+        if (user) {
+            res.send({ success: true });
+        } else {
+            res.send({ success: false });
+        }
+    } catch (error) {
+        res.send({ success: false, error: error.message });
+    }
+});
+
 const signup = fs.readFileSync('./public/html/signup.html', 'utf8');
 const login = fs.readFileSync('./public/html/login.html', 'utf8');
 const home = fs.readFileSync('./public/html/index.html', 'utf8');
