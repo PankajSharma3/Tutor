@@ -117,3 +117,13 @@ body {
         font-size: x-large;
     }
 }
+
+@media (max-width: 360px) {
+    .menu i {
+        font-size: 16px;
+        padding: 0px;
+    }
+    .menu{
+        padding: 0px;
+    }
+}
