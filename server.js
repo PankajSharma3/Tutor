@@ -427,6 +427,6 @@ server.get('/question-bank',(req,res)=>{
     res.send(questionbank);
 })
 
-server.listen(8080, () => {
+server.listen(port, () => {
     console.log(`Server is running on ${port}`);
 });
