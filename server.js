@@ -8,7 +8,7 @@ const bcrypt = require("bcrypt");
 
 dotenv.config();
 const server = express();
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 10000;
 
 server.use(session({
     secret: 'my secret',
