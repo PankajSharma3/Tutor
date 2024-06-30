@@ -39,12 +39,17 @@ const answerSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     username: { type: String },
     answers: { type: [String], default: [] },
-    test_name: { type: String, required: true },
-    submitted: { type: Number, default: 0 }
+    test_name: { type: String, required: true, unique: true },
+    submitted: { type: Number, default: 0 },
+    correct: {type:Number, default:null},
+    incorrect: {type:Number, default:null},
+    skipped: {type:Number, default:null},
+    maxMarks: {type:Number, default:null},
+    obtainedMarks: {type:Number, default:null}
 });
 
 const testSchema = new Schema({
-    test: { type: String, required: true },
+    test: { type: String, required: true, unique: true },
     date: { type: Date, required: true },
     start_time: { type: String, required: true },
     end_time: { type: String, required: true },
@@ -229,14 +234,33 @@ server.post('/api/submit-test', async (req, res) => {
     try {
         let userAnswers = await Answer.findOne({ userId, test_name });
         if (!userAnswers) {
-            userAnswers = new Answer({ userId, test_name });
+            return res.status(404).json({ message: 'No answers found for this user and test' });
         }
         userAnswers.submitted = 1;
+        const test = await Test.findOne({ test: test_name });
+        if (!test || !test.questions.length) {
+            return res.status(404).json({ message: 'No questions found for this test' });
+        }
+        let correct = 0, incorrect = 0, skipped = 0;
+        userAnswers.answers.forEach((answer, index) => {
+            if (!answer) {
+                skipped++;
+            } else if (answer === test.questions[index].correctAnswer) {
+                correct++;
+            } else {
+                incorrect++;
+            }
+        });
+        userAnswers.correct = correct;
+        userAnswers.incorrect = incorrect;
+        userAnswers.skipped = skipped;
+        userAnswers.maxMarks = test.questions.length*4;
+        userAnswers.obtainedMarks = (correct*4)-incorrect;
         await userAnswers.save();
-        res.status(200).json({ message: 'Test submitted successfully' });
+        res.status(200).json({ message: 'Test submitted and results calculated successfully', correct, incorrect, skipped, maxMarks: userAnswers.maxMarks, obtainedMarks: userAnswers.obtainedMarks });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Error submitting test', error });
+        res.status(500).json({ message: 'Error submitting test and calculating results', error });
     }
 });
 
@@ -254,39 +278,25 @@ server.post('/api/check-submission', async (req, res) => {
     }
 });
 
-server.post('/api/calculate-results', async (req, res) => {
+server.post('/api/get-test-results', async (req, res) => {
     const { userId, test_name } = req.body;
     try {
         const userAnswers = await Answer.findOne({ userId, test_name });
         if (!userAnswers) {
             return res.status(404).json({ message: 'No answers found for this user and test' });
         }
-        const test = await Test.findOne({ test: test_name });
-        if (!test || !test.questions.length) {
-            return res.status(404).json({ message: 'No questions found for this test' });
-        }
-        let correct = 0, incorrect = 0, skipped = 0;
-        userAnswers.answers.forEach((answer, index) => {
-            if (!answer) {
-                skipped++;
-            } else if (answer === test.questions[index].correctAnswer) {
-                correct++;
-            } else {
-                incorrect++;
-            }
-        });
         res.status(200).json({
-            correct,
-            incorrect,
-            skipped: test.questions.length-incorrect-correct,
-            maxMarks: test.questions.length
+            correct: userAnswers.correct,
+            incorrect: userAnswers.incorrect,
+            skipped: userAnswers.skipped,
+            maxMarks: userAnswers.maxMarks,
+            obtainedMarks: userAnswers.obtainedMarks
         });
     } catch (error) {
-        console.error('Error calculating results:', error);
-        res.status(500).json({ message: 'Error calculating results', error });
+        console.error('Error fetching test results:', error);
+        res.status(500).json({ message: 'Error fetching test results', error });
     }
 });
-
 
 server.post('/api/tests', async (req, res) => {
     try {
