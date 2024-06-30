@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     name.innerText = user.username;
 });
 
-document.addEventListener('DOMContentLoaded', async() => {
+document.addEventListener('DOMContentLoaded', async () => {
     const user = JSON.parse(localStorage.getItem('user'));
     if (!user) {
         console.error('User not found in localStorage');
@@ -13,7 +13,7 @@ document.addEventListener('DOMContentLoaded', async() => {
     const userId = user._id;
     const testName = localStorage.getItem('test');
     try {
-        const response = await fetch('/api/calculate-results', {
+        const response = await fetch('/api/get-test-results', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -22,8 +22,8 @@ document.addEventListener('DOMContentLoaded', async() => {
         });
         if (response.ok) {
             const result = await response.json();
-            let totalMarks = (result.correct*4)-result.incorrect;
-            document.querySelector('.test p:nth-child(1)').textContent = `Maximum Marks: ${result.maxMarks*4 || 'N/A'}`;
+            let totalMarks = (result.correct * 4) - result.incorrect;
+            document.querySelector('.test p:nth-child(1)').textContent = `Maximum Marks: ${result.maxMarks || 'N/A'}`;
             document.querySelector('.test p:nth-child(2)').textContent = `Total Correct answers: ${result.correct}`;
             document.querySelector('.test p:nth-child(3)').textContent = `Total Incorrect answers: ${result.incorrect}`;
             document.querySelector('.test p:nth-child(4)').textContent = `Total Skipped questions: ${result.skipped}`;
