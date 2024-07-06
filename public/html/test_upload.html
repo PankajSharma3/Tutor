@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test</title>
+    <link rel="stylesheet" href="/css/test_upload.css">
+    <link rel="shortcut icon" href="/photo/logo.jpeg" type="image/x-icon">
+</head>
+<body>
+    <div class="menu">
+        <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewBox="0,0,300,150">
+            <g fill="#ffffff" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+                <g transform="scale(5.12,5.12)">
+                    <path d="M0,9v2h50v-2zM0,24v2h50v-2zM0,39v2h50v-2z"></path>
+                </g>
+            </g>
+        </svg>
+        <i>AKP Physics 1.0</i>
+    </div>
+    <div class="container">
+        <form id="testForm">
+            <h1>Create a Test</h1>
+            <label for="test">Test Name:</label>
+            <input type="text" id="test" name="test" required>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+
+            <label for="start_time">Start Time:</label>
+            <input type="text" id="start_time" name="start_time" required placeholder="hh:mm AM/PM" pattern="(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)">
+
+            <label for="end_time">End Time:</label>
+            <input type="text" id="end_time" name="end_time" required placeholder="hh:mm AM/PM" pattern="(0[1-9]|1[0-2]):[0-5][0-9] (AM|PM)">
+
+            <div id="questions">
+                <h2>Questions 1</h2>
+                <div class="question">
+                    <label for="question1">Question:</label>
+                    <input type="text" id="question1" name="questions[0][text]" required>
+
+                    <label for="option1_1">Option 1:</label>
+                    <input type="text" id="option1_1" name="questions[0][options][0]" required>
+
+                    <label for="option1_2">Option 2:</label>
+                    <input type="text" id="option1_2" name="questions[0][options][1]" required>
+
+                    <label for="option1_3">Option 3:</label>
+                    <input type="text" id="option1_3" name="questions[0][options][2]" required>
+
+                    <label for="option1_4">Option 4:</label>
+                    <input type="text" id="option1_4" name="questions[0][options][3]" required>
+
+                    <label for="correctAnswer1">Correct Answer:</label>
+                    <input type="text" id="correctAnswer1" name="questions[0][correctAnswer]" required>
+                </div>
+            </div>
+            <button type="button" id="addQuestion">Add Question</button>
+            <button type="submit">Submit</button>
+        </form>
+    </div>
+
+    <script src="/js/test_upload.js"></script>
+</body>
+</html>
