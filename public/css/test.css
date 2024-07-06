@@ -1,4 +1,4 @@
-* {
+/* * {
     user-select: none;
 }
 
@@ -96,7 +96,6 @@ body {
     margin: 10px 0;
 }
 
-
 @media (max-width: 480px) {
     .menu{
         gap:20px;
@@ -126,5 +125,185 @@ body {
     }
     .menu{
         padding: 0px;
+    }
+} */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+* {
+    user-select: none;
+}
+
+h1{
+    margin-left: 2%;
+    margin-bottom: 2%;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 30px;
+    padding: 10px;
+}
+
+.menu svg {
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.menu i {
+    background: linear-gradient(130deg, #9796f0, #fbc7d4);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-weight: 600;
+    font-size: 2.1rem;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.card {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    margin-top: 20px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card img {
+    border-radius: 8px;
+    margin-right: 2%;
+    width: 3%;
+    height: auto;
+    object-fit: cover;
+}
+
+.card-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.card h3 {
+    margin: 0px;
+    font-size: 1.5em;
+    color: #ffffff;
+}
+
+.test-info {
+    margin: 0px;
+    font-size: 1em;
+    color: #aaaaaa;
+}
+
+.card + .card {
+    margin-top: 20px;
+}
+
+.test-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+.test-item {
+    margin: 10px 0;
+}
+
+@media (max-width: 720px){
+    .card h3 {
+        font-size: 0.8em;
+    }
+    
+    .test-info {
+        font-size: 0.7em;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu{
+        gap:20px;
+    }
+    .menu i{
+        font-size: x-large;
+    }
+
+    .menu svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card img{
+        max-width: 60px;
+    }
+
+    h1{
+        font-size: x-large;
+    }
+    .card h3 {
+        font-size: 0.6em;
+    }
+    
+    .test-info {
+        font-size: 0.5em;
+    }
+}
+
+@media (max-width: 360px) {
+    .menu i {
+        font-size: 16px;
+        padding: 0px;
+    }
+    .menu{
+        padding: 0px;
+    }
+    .card h3 {
+        font-size: 0.3em;
+    }
+    
+    .test-info {
+        font-size: 0.2em;
     }
 }

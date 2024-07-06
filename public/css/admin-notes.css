@@ -1,0 +1,206 @@
+* {
+    user-select: none;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+}
+
+h1 {
+    margin: 2% 2% 2% 2%;
+    color: #ffffff;
+}
+
+.container {
+    width: 95%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.menu {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+    padding: 10px;
+}
+
+.menu svg {
+    cursor: pointer;
+    margin-bottom: 15px;
+}
+
+.menu i {
+    background: linear-gradient(130deg, #9796f0, #fbc7d4);
+    -webkit-text-fill-color: transparent;
+    -webkit-background-clip: text;
+    font-weight: 600;
+    font-size: 2.1rem;
+    text-decoration: none;
+    padding: 10px;
+}
+
+.card-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.card {
+    display: flex;
+    align-items: center;
+    gap: 5%;
+    background-color: #1f1f1f;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.card:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+}
+
+.card img {
+    border-radius: 8px;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.card-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.card h3 {
+    margin: 0 0 10px;
+    font-size: 1.5em;
+}
+
+.test-info {
+    margin: 2px 0;
+    font-size: 1em;
+    color: #aaaaaa;
+}
+
+.folder-checkbox {
+    margin-right: 10px;
+    width: 15px;
+    display: none;
+}
+
+.card.long-press .folder-checkbox {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}
+
+.add-button, .delete-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    color: #ffffff;
+    background-color: #007bff;
+    border-radius: 5px;
+    border: none;
+}
+
+.button {
+    display: flex;
+}
+
+.add-button:hover, .delete-button:hover {
+    background-color: #444;
+}
+
+.delete-button {
+    display: none;
+    background-color: #ff4c4c;
+    border: none;
+}
+
+.loader {
+    border: 8px solid #ffffff;
+    border-radius: 50%;
+    border-top: 8px solid #26063b;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    position: fixed;
+    top: 45%;
+    left: 45%;
+    transform: translate(-50%, -50%);
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+    .menu {
+        gap: 20px;
+    }
+
+    .menu i {
+        font-size: 1.5rem;
+    }
+
+    .menu svg {
+        width: 40px;
+        height: 40px;
+    }
+
+    .card img {
+        width: 60px;
+        height: 60px;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    h1 {
+        font-size: 1.5rem;
+    }
+
+    .loader {
+        width: 50px;
+        height: 50px;
+        border-width: 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .menu {
+        gap: 10px;
+    }
+
+    .menu i {
+        font-size: 1.2rem;
+    }
+
+    .card {
+        padding: 10px;
+    }
+
+    .card img {
+        width: 50px;
+        height: 50px;
+    }
+
+    h1 {
+        font-size: 1.2rem;
+    }
+}
