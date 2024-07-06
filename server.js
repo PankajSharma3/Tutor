@@ -49,7 +49,7 @@ const answerSchema = new Schema({
 });
 
 const testSchema = new Schema({
-    test: { type: String, required: true, unique: true},
+    test: { type: String, required: true },
     date: { type: Date, required: true },
     start_time: { type: String, required: true },
     end_time: { type: String, required: true },
