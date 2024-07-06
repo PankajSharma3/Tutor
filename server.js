@@ -24,7 +24,7 @@ const userSchema = new Schema({
     username: { type: String },
     password: String,
     email: { type: String, unique: true },
-    phone: { type: Number, unique: true },
+    phone: { type: Number },
     gender: String,
     domain: String
 });
@@ -39,7 +39,7 @@ const answerSchema = new Schema({
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
     username: { type: String },
     answers: { type: [String], default: [] },
-    test_name: { type: String, required: true, unique: true },
+    test_name: { type: String, required: true },
     submitted: { type: Number, default: 0 },
     correct: {type:Number, default:null},
     incorrect: {type:Number, default:null},
@@ -49,7 +49,7 @@ const answerSchema = new Schema({
 });
 
 const testSchema = new Schema({
-    test: { type: String, required: true, unique: true },
+    test: { type: String, required: true, unique: true},
     date: { type: Date, required: true },
     start_time: { type: String, required: true },
     end_time: { type: String, required: true },
@@ -103,7 +103,6 @@ server.post('/signup', async (req, res) => {
         });
 
         await newUser.save();
-        console.log("Document added to the database");
         res.send(`
             <script>
                 alert('Signup successfully!');
@@ -140,16 +139,20 @@ server.post('/login', async (req, res) => {
         } else {
             res.send(`
                 <script>
-                localStorage.setItem('user', JSON.stringify({
-                    _id: '${user._id}',
-                    username: '${user.username}',
-                    email: '${user.email}',
-                    phone: '${user.phone}',
-                    gender: '${user.gender}',
-                    domain: '${user.domain}'
-                }));
+                    localStorage.setItem('user', JSON.stringify({
+                        _id: '${user._id}',
+                        username: '${user.username}',
+                        email: '${user.email}',
+                        phone: '${user.phone}',
+                        gender: '${user.gender}',
+                        domain: '${user.domain}'
+                    }));
                     alert('Login successfully!');
-                    window.location.href='/dashboard';
+                    if ('${user.domain}' === 'Admin') {
+                        window.location.href = '/admin_dashboard';
+                    } else {
+                        window.location.href = '/dashboard';
+                    }
                 </script>
             `);
         }
@@ -350,14 +353,79 @@ server.post('/api/secrets/question',async(req,res)=>{
 server.post('/api/user', async (req, res) => {
     const { _id } = req.body;
     try {
-        const user = await User.findOne({_id});
+        const user = await User.findOne({ _id });
         if (user) {
-            res.send({ success: true });
+            res.send({ success: true, user });
         } else {
             res.send({ success: false });
         }
     } catch (error) {
         res.send({ success: false, error: error.message });
+    }
+});
+
+
+server.post('/api/save-test', async (req, res) => {
+    let { test, date, start_time, end_time, questions } = req.body;
+    test = test.trim();
+    try {
+        const existingTest = await Test.findOne({ test });
+        if (existingTest) {
+            return res.status(400).json({ message: 'Test name already exists' });
+        }
+        const newTest = new Test({
+            test,
+            date,
+            start_time,
+            end_time,
+            questions
+        });
+
+        await newTest.save();
+        res.status(200).json({ message: 'Test saved successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error saving test', error });
+    }
+});
+
+
+
+server.post('/api/students-for-test', async (req, res) => {
+    const { testName } = req.body;
+    try {
+        const answers = await Answer.find({ test_name: testName, submitted: 1 }, 'userId');
+        const userIds = answers.map(answer => answer.userId);
+        const users = await User.find({ _id: { $in: userIds } }, 'username email phone');
+        res.json(users);
+    } catch (err) {
+        console.error('Error fetching students for test:', err);
+        res.status(500).send("Error fetching students for test");
+    }
+});
+
+server.post('/api/all-submitted-tests', async (req, res) => {
+    try {
+        const submittedTests = await Answer.find({ submitted: 1 }).distinct('test_name');
+        const tests = await Test.find({ test: { $in: submittedTests } }, 'test date start_time end_time');
+        res.json(tests);
+    } catch (err) {
+        console.error('Error fetching submitted tests:', err);
+        res.status(500).send("Error fetching submitted tests");
+    }
+});
+
+server.post('/api/delete-tests', async (req, res) => {
+    const { testName } = req.body;
+    try {
+        const result = await Test.findOneAndDelete({ test: testName });
+        if (result) {
+            res.status(200).send({ message: 'Test deleted successfully' });
+        } else {
+            res.status(404).send({ message: 'Test not found' });
+        }
+    } catch (error) {
+        res.status(500).send({ message: 'An error occurred', error });
     }
 });
 
@@ -376,6 +444,16 @@ const redirect = fs.readFileSync('./public/html/thanks_res.html', 'utf8');
 const thanks = fs.readFileSync('./public/html/thanks.html', 'utf8');
 const notes = fs.readFileSync('./public/html/notes.html','utf8');
 const questionbank = fs.readFileSync('./public/html/question-bank.html','utf8');
+const admin_notes = fs.readFileSync('./public/html/admin-notes.html','utf8');
+const admin_dashboard = fs.readFileSync('./public/html/admin-dashboard.html', 'utf8');
+const notes_upload = fs.readFileSync('./public/html/notes-upload.html','utf8');
+const admin_question_bank = fs.readFileSync('./public/html/admin-question-bank.html','utf8');
+const question_upload = fs.readFileSync('./public/html/question-upload.html','utf8');
+const admin_test = fs.readFileSync('./public/html/admin-test.html','utf8');
+const admin_result = fs.readFileSync('./public/html/admin-result.html','utf8');
+const admin_result_dashboard = fs.readFileSync('./public/html/admin-result-dashboard.html','utf8');
+const student_result_dashboard = fs.readFileSync('./public/html/student_result_dashboard.html','utf8');
+const test_upload = fs.readFileSync('./public/html/test_upload.html','utf8');
 
 server.get('/signup', (req, res) => {
     res.send(signup);
@@ -431,11 +509,51 @@ server.get('/thanks', (req, res) => {
 
 server.get('/notes',(req,res)=>{
     res.send(notes);
-})
+});
 
 server.get('/question-bank',(req,res)=>{
     res.send(questionbank);
-})
+});
+
+server.get('/admin-notes', (req, res) => {
+    res.send(admin_notes);
+});
+
+server.get('/admin_dashboard', (req, res) => {
+    res.send(admin_dashboard);
+});
+
+server.get('/notes_upload',(req,res)=>{
+    res.send(notes_upload);
+});
+
+server.get('/admin_question_bank',(req,res)=>{
+    res.send(admin_question_bank);
+});
+
+server.get('/question_upload',(req,res)=>{
+    res.send(question_upload);
+});
+
+server.get('/admin_test',(req,res)=>{
+    res.send(admin_test);
+});
+
+server.get('/admin_result', (req, res) => {
+    res.send(admin_result);
+});
+
+server.get('/admin_result_dashboard', (req, res) => {
+    res.send(admin_result_dashboard);
+});
+
+server.get('/student_result_dashboard', (req, res) => {
+    res.send(student_result_dashboard);
+});
+
+server.get('/test_upload',(req,res)=>{
+    res.send(test_upload);
+});
 
 server.listen(port, () => {
     console.log(`Server is running on ${port}`);
