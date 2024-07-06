@@ -167,10 +167,6 @@ h1 {
         height: 60px;
     }
 
-    .card {
-        padding: 15px;
-    }
-
     h1 {
         font-size: 1.5rem;
     }
@@ -189,10 +185,6 @@ h1 {
 
     .menu i {
         font-size: 1.2rem;
-    }
-
-    .card {
-        padding: 10px;
     }
 
     .card img {
