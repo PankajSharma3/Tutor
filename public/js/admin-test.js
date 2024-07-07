@@ -37,27 +37,30 @@ document.addEventListener('DOMContentLoaded', () => {
             const testName = test.test;
 
             let touchStartTime;
+            let longPressTimer;
 
+            // Touch events
             card.addEventListener('touchstart', (event) => {
                 event.preventDefault();
                 touchStartTime = new Date().getTime();
+                longPressTimer = setTimeout(() => {
+                    card.classList.add('long-press');
+                    enableAllCheckboxes(checkbox);
+                }, 1000);
             });
 
             card.addEventListener('touchmove', (event) => {
                 event.preventDefault();
-                clearTimeout(longPressTimer); // Clear the long-press timer if moved
+                clearTimeout(longPressTimer);
             });
 
             card.addEventListener('touchend', (event) => {
                 event.preventDefault();
                 const touchEndTime = new Date().getTime();
                 const touchDuration = touchEndTime - touchStartTime;
+                clearTimeout(longPressTimer);
 
-                if (touchDuration > 1000) {
-                    card.classList.add('long-press');
-                    enableAllCheckboxes(checkbox);
-                } else {
-                    // Handle short tap
+                if (touchDuration < 1000) {
                     if (!checkbox.checked) {
                         localStorage.setItem('test', testName);
                         localStorage.setItem('start_time', start_time);
@@ -73,8 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.classList.remove('long-press');
             });
 
-            // Mouse event fallbacks
-            let longPressTimer;
+            // Mouse events (fallback for touch)
             card.addEventListener('mousedown', () => {
                 longPressTimer = setTimeout(() => {
                     card.classList.add('long-press');
@@ -90,21 +92,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 clearTimeout(longPressTimer);
             });
 
-            card.addEventListener('click', () => {
+            // Click event handling
+            card.addEventListener('click', (event) => {
                 if (!checkbox.checked) {
-                    localStorage.setItem('test', testName);
-                    localStorage.setItem('start_time', start_time);
-                    localStorage.setItem('end_time', end_time);
-                    localStorage.setItem('date', date);
+                    if (!card.classList.contains('long-press')) {
+                        localStorage.setItem('test', testName);
+                        localStorage.setItem('start_time', start_time);
+                        localStorage.setItem('end_time', end_time);
+                        localStorage.setItem('date', date);
+                    } else {
+                        card.classList.remove('long-press');
+                    }
                 }
             });
         });
 
+        // Add button functionality
         const addButton = document.getElementById('add-button');
         addButton.addEventListener('click', () => {
             window.location.href = '/test_upload';
         });
 
+        // Delete button functionality
         const deleteButton = document.getElementById('delete-button');
         deleteButton.addEventListener('click', async () => {
             const selectedTests = document.querySelectorAll('.delete-checkbox:checked');
@@ -143,12 +152,14 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
+        // Update UI based on checkbox state
         document.addEventListener('change', (event) => {
             if (event.target.classList.contains('delete-checkbox')) {
                 toggleDeleteButton();
             }
         });
 
+        // Initial UI state check
         toggleDeleteButton();
     })
     .catch(error => console.error('Error fetching tests:', error));
