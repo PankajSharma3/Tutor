@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
     fetch('/api/tests', {
         method: 'POST',
@@ -40,41 +41,39 @@ document.addEventListener('DOMContentLoaded', () => {
             let longPressTimer;
 
             // Touch events
-            card.addEventListener('touchstart', (event) => {
-                event.preventDefault();
-                touchStartTime = new Date().getTime();
-                longPressTimer = setTimeout(() => {
-                    card.classList.add('long-press');
-                    enableAllCheckboxes(checkbox);
-                }, 1000);
-            });
+            if ('ontouchstart' in document.documentElement) {
+                card.addEventListener('touchstart', (event) => {
+                    touchStartTime = new Date().getTime();
+                    longPressTimer = setTimeout(() => {
+                        card.classList.add('long-press');
+                        enableAllCheckboxes(checkbox);
+                    }, 1000);
+                });
 
-            card.addEventListener('touchmove', (event) => {
-                event.preventDefault();
-                clearTimeout(longPressTimer);
-            });
+                card.addEventListener('touchmove', (event) => {
+                    clearTimeout(longPressTimer);
+                });
 
-            card.addEventListener('touchend', (event) => {
-                event.preventDefault();
-                const touchEndTime = new Date().getTime();
-                const touchDuration = touchEndTime - touchStartTime;
-                clearTimeout(longPressTimer);
+                card.addEventListener('touchend', (event) => {
+                    const touchEndTime = new Date().getTime();
+                    const touchDuration = touchEndTime - touchStartTime;
+                    clearTimeout(longPressTimer);
 
-                if (touchDuration < 1000) {
-                    if (!checkbox.checked) {
-                        localStorage.setItem('test', testName);
-                        localStorage.setItem('start_time', start_time);
-                        localStorage.setItem('end_time', end_time);
-                        localStorage.setItem('date', date);
+                    if (touchDuration < 1000) {
+                        if (!checkbox.checked) {
+                            localStorage.setItem('test', testName);
+                            localStorage.setItem('start_time', start_time);
+                            localStorage.setItem('end_time', end_time);
+                            localStorage.setItem('date', date);
+                        }
                     }
-                }
-            });
+                });
 
-            card.addEventListener('touchcancel', (event) => {
-                event.preventDefault();
-                clearTimeout(longPressTimer);
-                card.classList.remove('long-press');
-            });
+                card.addEventListener('touchcancel', (event) => {
+                    clearTimeout(longPressTimer);
+                    card.classList.remove('long-press');
+                });
+            }
 
             // Mouse events (fallback for touch)
             card.addEventListener('mousedown', () => {
