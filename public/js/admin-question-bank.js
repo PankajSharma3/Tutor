@@ -94,6 +94,7 @@ function createTestCard(folderName) {
     const card = document.createElement('div');
     card.classList.add('card');
 
+    // Add support for mouse events
     card.addEventListener('mousedown', (e) => {
         pressTimer = setTimeout(() => {
             card.classList.add('long-press');
@@ -106,6 +107,22 @@ function createTestCard(folderName) {
     });
 
     card.addEventListener('mouseleave', () => {
+        clearTimeout(pressTimer);
+    });
+
+    // Add support for touch events
+    card.addEventListener('touchstart', (e) => {
+        pressTimer = setTimeout(() => {
+            card.classList.add('long-press');
+            enableAllCheckboxes(checkbox);
+        }, 1000);
+    });
+
+    card.addEventListener('touchend', () => {
+        clearTimeout(pressTimer);
+    });
+
+    card.addEventListener('touchmove', () => {
         clearTimeout(pressTimer);
     });
 
