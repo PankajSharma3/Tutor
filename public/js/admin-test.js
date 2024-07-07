@@ -36,19 +36,58 @@ document.addEventListener('DOMContentLoaded', () => {
             const checkbox = listItem.querySelector('.delete-checkbox');
             const testName = test.test;
 
+            let touchStartTime;
+
+            card.addEventListener('touchstart', (event) => {
+                event.preventDefault();
+                touchStartTime = new Date().getTime();
+            });
+
+            card.addEventListener('touchmove', (event) => {
+                event.preventDefault();
+                clearTimeout(longPressTimer); // Clear the long-press timer if moved
+            });
+
+            card.addEventListener('touchend', (event) => {
+                event.preventDefault();
+                const touchEndTime = new Date().getTime();
+                const touchDuration = touchEndTime - touchStartTime;
+
+                if (touchDuration > 1000) {
+                    card.classList.add('long-press');
+                    enableAllCheckboxes(checkbox);
+                } else {
+                    // Handle short tap
+                    if (!checkbox.checked) {
+                        localStorage.setItem('test', testName);
+                        localStorage.setItem('start_time', start_time);
+                        localStorage.setItem('end_time', end_time);
+                        localStorage.setItem('date', date);
+                    }
+                }
+            });
+
+            card.addEventListener('touchcancel', (event) => {
+                event.preventDefault();
+                clearTimeout(longPressTimer);
+                card.classList.remove('long-press');
+            });
+
+            // Mouse event fallbacks
+            let longPressTimer;
             card.addEventListener('mousedown', () => {
-                const pressTimer = setTimeout(() => {
+                longPressTimer = setTimeout(() => {
                     card.classList.add('long-press');
                     enableAllCheckboxes(checkbox);
                 }, 1000);
+            });
 
-                card.addEventListener('mouseup', () => {
-                    clearTimeout(pressTimer);
-                });
+            card.addEventListener('mouseup', () => {
+                clearTimeout(longPressTimer);
+            });
 
-                card.addEventListener('mouseleave', () => {
-                    clearTimeout(pressTimer);
-                });
+            card.addEventListener('mouseleave', () => {
+                clearTimeout(longPressTimer);
             });
 
             card.addEventListener('click', () => {
