@@ -1,13 +1,11 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getStorage, ref, listAll, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
-const loader = document.getElementById('loader');
 const addButton = document.getElementById('add-button');
 const deleteButton = document.getElementById('delete-button');
 
 async function fetchSecrets() {
     try {
-        loader.style.display = 'block';
         const response = await fetch('/api/secrets', {
             method: 'POST',
             headers: {
@@ -21,8 +19,6 @@ async function fetchSecrets() {
     } catch (error) {
         console.error('Error fetching secrets:', error);
         return null;
-    } finally {
-        loader.style.display = 'none';
     }
 }
 
@@ -199,7 +195,6 @@ function downloadFilesInFolder(folderName) {
 
 function listFolders() {
     const listRef = ref(storage);
-    loader.style.display = 'block';
     listAll(listRef)
         .then((res) => {
             const folderNames = new Set();
@@ -213,15 +208,11 @@ function listFolders() {
         .catch((error) => {
             console.error('Error listing folders:', error);
         })
-        .finally(() => {
-            loader.style.display = 'none';
-        });
 }
 
 function deleteFolder(folderName) {
     return new Promise((resolve, reject) => {
         const folderRef = ref(storage, folderName);
-        loader.style.display = 'block';
         listAll(folderRef)
             .then((res) => {
                 const deletePromises = res.items.map((itemRef) => {
@@ -248,9 +239,6 @@ function deleteFolder(folderName) {
                 console.error('Error listing files for deletion:', error);
                 reject(error);
             })
-            .finally(() => {
-                loader.style.display = 'none';
-            });
     });
 }
 
