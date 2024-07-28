@@ -20,9 +20,6 @@ async function fetchSecrets() {
 }
 
 async function initializeAppWithSecrets() {
-    const loader = document.getElementById('loader');
-    loader.style.display = 'block';
-
     const secrets = await fetchSecrets();
     if (secrets) {
         const firebaseConfig = {
@@ -80,15 +77,12 @@ async function initializeAppWithSecrets() {
                 });
             } catch (error) {
                 console.error(error);
-            } finally {
-                loader.style.display = 'none';
             }
         }
 
         listFolders();
     } else {
         console.error('Secrets not available');
-        loader.style.display = 'none';
     }
 }
 
