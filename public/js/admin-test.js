@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
             listItem.classList.add('test-item');
             const date = new Date(test.date).toLocaleDateString('en-US', {
                 year: 'numeric',
-                month: '2-digit',
+                month: 'short',
                 day: '2-digit'
             });
             const start_time = parseTime(test.start_time);
