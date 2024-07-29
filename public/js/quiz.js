@@ -52,7 +52,9 @@ function submitTest() {
     .then(data => {
         if (data.message === 'Test submitted and results calculated successfully') {
             let user = localStorage.getItem('user');
+            let test = localStorage.getItem('test');
             localStorage.clear();
+            localStorage.setItem('test',test);
             localStorage.setItem('user',user);
             window.location.href = "/thanks";
         } else {
@@ -221,6 +223,39 @@ function checkUserDetails() {
     }
     else{
         window.location.href = '/';
+    }
+}
+
+function checkSubmissionStatus() {
+    try {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || !user._id) {
+            throw new Error('Invalid user data');
+        }
+
+        const test_name = localStorage.getItem('test');
+        if (!test_name) {
+            throw new Error('Test name not found');
+        }
+
+        fetch('/api/check-submission', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ userId: user._id, test_name })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.submitted === 1) {
+                window.location.href = "/thanks";
+            }
+        })
+        .catch(error => {
+            console.error('Error checking submission status:', error);
+        });
+    } catch (error) {
+        console.error('Error in checkSubmissionStatus:', error);
     }
 }
 
