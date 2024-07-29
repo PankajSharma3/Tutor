@@ -40,20 +40,26 @@ function createStudentCard(student) {
     const cardContent = document.createElement('div');
     cardContent.classList.add('card-content');
 
+    const profileLogo = document.createElement('img');
+    profileLogo.src="/photo/profile.png";
+    profileLogo.alt = 'Profile Logo';
+    profileLogo.classList.add('profile-logo');
+
     const studentName = document.createElement('h4');
     studentName.textContent = student.username;
+
+    cardContent.appendChild(profileLogo);
     cardContent.appendChild(studentName);
 
     card.appendChild(cardContent);
     card.addEventListener('click', () => {
         localStorage.setItem('studentId', student._id);
-        localStorage.setItem('username',student.username);
+        localStorage.setItem('username', student.username);
         window.location.href = "/student_result_dashboard";
     });
 
     return card;
 }
-
 
 function checkUserDetails() {
     const user = JSON.parse(localStorage.getItem('user'));
