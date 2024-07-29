@@ -89,7 +89,6 @@ document.addEventListener('DOMContentLoaded', () => {
         return response.json();
     })
     .then(questions => {
-        console.log('Fetched questions:', questions);
         localStorage.setItem('questions', JSON.stringify(questions));
         let currentQuestion = localStorage.getItem('currentQuestion') ? parseInt(localStorage.getItem('currentQuestion')) : 0;
         let answers = JSON.parse(localStorage.getItem('answers')) || [];
@@ -222,35 +221,6 @@ function checkUserDetails() {
     }
     else{
         window.location.href = '/';
-    }
-}
-
-function checkUserDetails() {
-    const user = JSON.parse(localStorage.getItem('user'));
-    if (user) {
-        fetch('/api/user', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ _id: user._id }) 
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (!data.success) {
-                window.location.href = '/';
-            } else {
-                if (data.user.domain === 'Admin') {
-                    window.location.href = '/';
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            window.location.href = '/'; 
-        });
-    } else {
-        window.location.href = '/'; 
     }
 }
 
