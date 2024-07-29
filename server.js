@@ -232,12 +232,13 @@ server.post('/api/get-user-answers', async (req, res) => {
     }
 });
 
+
 server.post('/api/submit-test', async (req, res) => {
     const { userId, test_name } = req.body;
     try {
         let userAnswers = await Answer.findOne({ userId, test_name });
         if (!userAnswers) {
-            return res.status(404).json({ message: 'No answers found for this user and test' });
+            userAnswers = new Answer({ userId, test_name, answers: [], submitted: 1 });
         }
         userAnswers.submitted = 1;
         const test = await Test.findOne({ test: test_name });
@@ -245,10 +246,11 @@ server.post('/api/submit-test', async (req, res) => {
             return res.status(404).json({ message: 'No questions found for this test' });
         }
         let correct = 0, incorrect = 0, skipped = 0;
-        userAnswers.answers.forEach((answer, index) => {
+        test.questions.forEach((question, index) => {
+            const answer = userAnswers.answers[index];
             if (!answer) {
                 skipped++;
-            } else if (answer === test.questions[index].correctAnswer) {
+            } else if (answer === question.correctAnswer) {
                 correct++;
             } else {
                 incorrect++;
@@ -257,10 +259,17 @@ server.post('/api/submit-test', async (req, res) => {
         userAnswers.correct = correct;
         userAnswers.incorrect = incorrect;
         userAnswers.skipped = skipped;
-        userAnswers.maxMarks = test.questions.length*4;
-        userAnswers.obtainedMarks = (correct*4)-incorrect;
+        userAnswers.maxMarks = test.questions.length * 4;
+        userAnswers.obtainedMarks = (correct * 4) - incorrect;
         await userAnswers.save();
-        res.status(200).json({ message: 'Test submitted and results calculated successfully', correct, incorrect, skipped, maxMarks: userAnswers.maxMarks, obtainedMarks: userAnswers.obtainedMarks });
+        res.status(200).json({
+            message: 'Test submitted and results calculated successfully',
+            correct,
+            incorrect,
+            skipped,
+            maxMarks: userAnswers.maxMarks,
+            obtainedMarks: userAnswers.obtainedMarks
+        });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Error submitting test and calculating results', error });
