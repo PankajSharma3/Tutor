@@ -68,14 +68,13 @@ h4{
 .card img {
     border-radius: 8px;
     margin-right: 20px;
-    width: 80px;
+    width: 50px;
     height: auto;
     object-fit: cover;
 }
 
 .card-content {
     display: flex;
-    flex-direction: column;
 }
 
 .card h3 {
