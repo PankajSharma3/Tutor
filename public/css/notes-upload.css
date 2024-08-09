@@ -1,9 +1,9 @@
 body {
     user-select: none;
     font-family: Arial, sans-serif;
+    margin-top: 10px;
     background-color: #000000;
-    color: #ffffff;
-    margin: 0;
+    color: #ddd;
     padding: 0;
     display: flex;
     flex-direction: column;
@@ -12,11 +12,9 @@ body {
 }
 
 .upload-container {
+    background-color: #000000;
     text-align: center;
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    background-color: #fff;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     max-width: 400px;
 }
@@ -45,11 +43,12 @@ body {
 }
 
 .upload-box {
+    background-color: #000000;
+    border-color: #ffffff;
     margin-top: 20px;
     padding: 20px;
-    border: 2px dashed #ddd;
+    border: 2px dashed;
     border-radius: 10px;
-    background-color: #fafafa;
     position: relative;
 }
 
@@ -78,7 +77,7 @@ body {
 
 .progress-bar-container {
     width: 100%;
-    background-color: #e0e0e0;
+    background-color: #666;
     border-radius: 5px;
     margin-top: 20px;
     overflow: hidden;
@@ -150,39 +149,5 @@ body {
 
     .menu {
         padding: 0px;
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    body {
-        margin-top: 10px;
-        background-color: #000000;
-        color: #ddd;
-    }
-
-    .upload-container {
-        background-color: #000000;
-        border-color: #000000;
-    }
-
-    .upload-box {
-        background-color: #000000;
-        border-color: #ffffff;
-    }
-
-    .upload-button {
-        background-color: #0056b3;
-    }
-
-    .upload-button:hover {
-        background-color: #003f7f;
-    }
-
-    .progress-bar-container {
-        background-color: #666;
-    }
-
-    .progress-bar {
-        background-color: #0056b3;
     }
 }
